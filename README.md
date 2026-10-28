@@ -102,11 +102,13 @@ ImageId: '{{resolve:ssm:/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_6
 Após a correção no modelo, a pilha foi executada e finalizada com o status verde `CREATE_COMPLETE`, provisionando toda a infraestrutura com sucesso.
 
 - **Stack Concluída no CloudFormation:**
-  ![CloudFormation Success](images/cloudformation-success.png)
+  ![CloudFormation Success](images/01-cloudformation-stack-complete.png)
 
 - **Instância EC2 Rodando:**
-  ![EC2 Instance Running](images/ec2-instance-running.png)
+  ![EC2 Instance Running](images/02-ec2-running-instance.png)
 
+- **VPC criada com sucesso:**
+ ![EC2 Instance Running](images/03-aws-vpc-overview.png)
 ---
 
 ## 🔒 Segurança e Boas Práticas (Destruição de Recursos)
