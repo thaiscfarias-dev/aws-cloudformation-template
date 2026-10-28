@@ -81,3 +81,40 @@ Resources:
       Tags:
         - Key: Name
           Value: LabInstance
+```
+
+## 🔍 Troubleshooting: Desafios Encontrados e Resolução
+
+Durante as iterações iniciais de teste do template, a pilha falhou com o status `ROLLBACK_COMPLETE` devido a um erro de `CREATE_FAILED` no recurso `EC2Instance`.
+
+### O Erro:
+O modelo inicial utilizava um ID de AMI estático (`ami-01e36b0bc71a6462a`), que havia expirado ou não estava disponível na região `us-west-2` no momento da execução.
+
+![Erro de AMI no CloudFormation](images/04-error-troubleshooting-ami.png)
+
+### A Solução:
+Para evitar códigos de imagens estáticos que expiram rapidamente, a melhor prática adotada foi utilizar o **SSM Parameter Store**. Desta forma, o CloudFormation busca dinamicamente a AMI mais recente e compatível do Amazon Linux 2 no momento da criação:
+```yaml
+ImageId: '{{resolve:ssm:/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2:1}}'
+```
+## ✅ Resultado Final (Sucesso)
+
+Após a correção no modelo, a pilha foi executada e finalizada com o status verde `CREATE_COMPLETE`, provisionando toda a infraestrutura com sucesso.
+
+- **Stack Concluída no CloudFormation:**
+  ![CloudFormation Success](images/cloudformation-success.png)
+
+- **Instância EC2 Rodando:**
+  ![EC2 Instance Running](images/ec2-instance-running.png)
+
+---
+
+## 🔒 Segurança e Boas Práticas (Destruição de Recursos)
+
+Em ambientes de nuvem e laboratórios acadêmicos (como o AWS Academy/Vocareum), a segurança e o controle de custos são prioridades absolutas:
+* **Credenciais Temporárias:** Todas as credenciais de acesso utilizadas durante este laboratório foram geradas de forma dinâmica e efêmera.
+* **Destruição de Recursos:** Ao término do laboratório, a sessão foi encerrada e o botão **End Lab** foi acionado, garantindo a revogação imediata das chaves de acesso e a **destruição completa de todos os recursos provisionados** (VPC, Instância EC2, Sub-rede e Gateways), evitando custos residuais ou exposição de dados.
+
+---
+*Desenvolvido com dedicação por Thais Cardoso de Farias durante os estudos em Cloud Computing.*
+
